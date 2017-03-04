@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block body %}
+    {% for image in record.nbImages %}
+        <img src="{{ '/tmp/'~image~'/.jpeg' }}">
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var v = {{ record.v }};
+        var h = {{ record.h }};
+
+    </script>
+{% endblock %}
