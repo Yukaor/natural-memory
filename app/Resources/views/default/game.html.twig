@@ -5,15 +5,22 @@
 {% endblock %}
 
 {% block body %}
-    {% for image in record.nbImages %}
-        <img src="{{ '/tmp/'~image~'/.jpeg' }}">
-    {% endfor %}
+    <div class="container" id="plateau">
+        {% for line in record.plateau %}
+
+            <div class="row">
+                {% for card in line %}
+                    <div class="col-sm-1">
+                        <div class="img-responsive">
+                            <img src="{{ card }}" width="100" height="100" style="padding: 10px;">
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% endfor %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        var v = {{ record.v }};
-        var h = {{ record.h }};
-
-    </script>
 {% endblock %}

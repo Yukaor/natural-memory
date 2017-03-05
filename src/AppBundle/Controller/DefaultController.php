@@ -9,8 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\DomCrawler\Crawler;
 
 
 class DefaultController extends Controller
@@ -51,22 +50,80 @@ class DefaultController extends Controller
         $record['user'] = $request->get('user');
         $record['h'] = $request->get('h');
         $record['v'] = $request->get('v');
-        $record['nbImages'] = ($record['h']*$record['v'])/2;
-        $this->getImagesAction($record['nbImages']);
+        $record['countimgs'] = ($record['h']*$record['v'])/2;
+        $cards = $this->getImagesAction($record['countimgs']);
+        foreach ($cards as $card)
+        {
+            array_push($cards,$card);
+        }
+
+        shuffle($cards);
+
+
+        $v = 0;
+        $count = 0;
+        for($i = 0; $i < count($cards); $i++)
+        {
+            if ($i < $record['h']*($v+1))
+            {
+                $record['plateau'][$v][$count] = $cards[$i];
+            }
+            else
+            {
+                $v++;
+                $record['plateau'][$v][$count] = $cards[$i];
+            }
+            $count++;
+            if ($count == $record['h'])
+            {
+                $count = 0;
+            }
+        }
+        dump($record['plateau']);
         return $this->render('default/game.html.twig', array('record'=>$record));
     }
 
-    public function getImagesAction($nbImage)
+    public function getImagesAction($countImgs)
     {
-        $fs = new Filesystem();
+        if ($countImgs / 8 <= 1 ){$loops = 1;}
+        elseif ($countImgs % 8 == 0){$loops = $countImgs/8;}
+        else{$loops = ($countImgs/8)+1;}
+        $count = 0;
 
-        for ($i = 1; $i <= $nbImage; $i++)
+        $rdyImages = array();
+        $imagesRestantes = $countImgs;
+
+        for ($i = $loops; $i != 0; $i-- )
         {
-            $fs->copy('https://source.unsplash.com/category/nature/200x200.jpeg', '/web/'.$i.'.jpeg');
-            exit;
+            $url = 'http://www.naturepicoftheday.com/random';
+            $html = file_get_contents($url);
+            $crawler = new Crawler($html);
+            $images = $crawler
+                ->filterXpath('//span[contains(@class, "PLAIN_LNK")]')
+                ->filterXpath('//img')
+                ->extract(array('src'));
+
+            foreach ($images as $image)
+            {
+                if ($imagesRestantes != 0)
+                {
+                    $iNeedle = strpos($image, 'thumb');
+                    $imglink = substr_replace($image, 'full.jpg', $iNeedle);
+                    $imgURL = "http://www.naturepicoftheday.com".$imglink;
+
+                    if (in_array($imgURL, $rdyImages))
+                    {
+                        if ($i == 0){$i++;}
+                    }
+                    else
+                    {
+                        $rdyImages[] = $imgURL;
+                        $count++;
+                        $imagesRestantes--;
+                    }
+                }
+            }
         }
-
-        return;
+        return $rdyImages;
     }
-
 }
