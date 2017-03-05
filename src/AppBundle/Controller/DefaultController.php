@@ -51,7 +51,7 @@ class DefaultController extends Controller
         $record['h'] = $request->get('h');
         $record['v'] = $request->get('v');
         $record['countimgs'] = ($record['h']*$record['v'])/2;
-        $cards = $this->getImagesAction($record['countimgs']);
+        $cards = $this->_getImage($record['countimgs']);
         foreach ($cards as $card)
         {
             array_push($cards,$card);
@@ -83,11 +83,18 @@ class DefaultController extends Controller
         return $this->render('default/game.html.twig', array('record'=>$record));
     }
 
-    public function getImagesAction($countImgs)
+    private function _getImage($countImgs)
     {
-        if ($countImgs / 8 <= 1 ){$loops = 1;}
-        elseif ($countImgs % 8 == 0){$loops = $countImgs/8;}
-        else{$loops = ($countImgs/8)+1;}
+
+        $loops = 1;
+
+        if($countImgs % 8 == 0)
+        {
+            $loops = $countImgs/8;
+        }
+        else{
+            $loops = ($countImgs/8)+1;
+        }
         $count = 0;
 
         $rdyImages = array();
