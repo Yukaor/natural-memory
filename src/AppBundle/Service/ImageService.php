@@ -23,7 +23,7 @@ class ImageService
         } elseif ($countImages % 8 == 0) {
             $loops = $countImages / 8;
         } else {
-            $loops = ($countImages / 8) + 1;
+            $loops = floor($countImages / 8) + 1;
         }
 
         return $loops;
