@@ -16,3 +16,11 @@
 /web/bundles/
 
 \.idea/workspace\.xml
+
+web/config\.php
+
+\.idea/
+
+var/SymfonyRequirements\.php
+
+bin/symfony_requirements
