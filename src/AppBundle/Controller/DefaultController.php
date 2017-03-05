@@ -10,10 +10,32 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\DomCrawler\Crawler;
+use AppBundle\Service;
 
 
 class DefaultController extends Controller
 {
+    private $imageService;
+
+    /**
+     * @return mixed
+     */
+    public function getImageService()
+    {
+        return $this->imageService;
+    }
+
+    /**
+     * @param mixed $imageService
+     * @return DefaultController
+     */
+    public function setImageService($imageService)
+    {
+        $this->imageService = $imageService;
+        return $this;
+    }
+
+
     /**
      * @Route("/", name="homepage")
      */
@@ -47,11 +69,13 @@ class DefaultController extends Controller
      */
     public function gameAction(Request $request)
     {
+
+        $this->setImageService(new Service\ImageService());
         $record['user'] = $request->get('user');
         $record['h'] = $request->get('h');
         $record['v'] = $request->get('v');
         $record['countimgs'] = ($record['h']*$record['v'])/2;
-        $cards = $this->_getImage($record['countimgs']);
+        $cards = $this->getImageService()->getImageNature($record['countimgs']);
         foreach ($cards as $card)
         {
             array_push($cards,$card);
@@ -79,58 +103,7 @@ class DefaultController extends Controller
                 $count = 0;
             }
         }
-        dump($record['plateau']);
+
         return $this->render('default/game.html.twig', array('record'=>$record));
-    }
-
-    private function _getImage($countImgs)
-    {
-
-        $loops = 1;
-
-        if($countImgs % 8 == 0)
-        {
-            $loops = $countImgs/8;
-        }
-        else{
-            $loops = ($countImgs/8)+1;
-        }
-        $count = 0;
-
-        $rdyImages = array();
-        $imagesRestantes = $countImgs;
-
-        for ($i = $loops; $i != 0; $i-- )
-        {
-            $url = 'http://www.naturepicoftheday.com/random';
-            $html = file_get_contents($url);
-            $crawler = new Crawler($html);
-            $images = $crawler
-                ->filterXpath('//span[contains(@class, "PLAIN_LNK")]')
-                ->filterXpath('//img')
-                ->extract(array('src'));
-
-            foreach ($images as $image)
-            {
-                if ($imagesRestantes != 0)
-                {
-                    $iNeedle = strpos($image, 'thumb');
-                    $imglink = substr_replace($image, 'full.jpg', $iNeedle);
-                    $imgURL = "http://www.naturepicoftheday.com".$imglink;
-
-                    if (in_array($imgURL, $rdyImages))
-                    {
-                        if ($i == 0){$i++;}
-                    }
-                    else
-                    {
-                        $rdyImages[] = $imgURL;
-                        $count++;
-                        $imagesRestantes--;
-                    }
-                }
-            }
-        }
-        return $rdyImages;
     }
 }
