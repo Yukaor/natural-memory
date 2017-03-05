@@ -16,22 +16,28 @@ class ImageService
     {
     }
 
+    private function _LoopsDetection($countImages)
+    {
+        if ($countImages / 8 <= 1) {
+            $loops = 1;
+        } elseif ($countImages % 8 == 0) {
+            $loops = $countImages / 8;
+        } else {
+            $loops = ($countImages / 8) + 1;
+        }
+
+        return $loops;
+    }
+
     public function getImageNature($countImgs)
     {
-
-        if ($countImgs / 8 <= 1) {
-            $loops = 1;
-        } elseif ($countImgs % 8 == 0) {
-            $loops = $countImgs / 8;
-        } else {
-            $loops = ($countImgs / 8) + 1;
-        }
-        $count = 0;
 
         $rdyImages = array();
         $imagesRestantes = $countImgs;
 
-        for ($i = $loops; $i != 0; $i--) {
+        $Index = $this->_LoopsDetection($countImgs);
+
+        for ($i = $Index; $i != 0; $i--) {
             $url = 'http://www.naturepicoftheday.com/random';
             $html = file_get_contents($url);
             $crawler = new Crawler($html);
@@ -52,7 +58,6 @@ class ImageService
                         }
                     } else {
                         $rdyImages[] = $imgURL;
-                        $count++;
                         $imagesRestantes--;
                     }
                 }
