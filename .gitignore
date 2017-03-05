@@ -16,3 +16,4 @@
 .idea/*
 \.idea/workspace\.xml
 .gitignore
+composer.phar

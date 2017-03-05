@@ -8,6 +8,7 @@
 
 namespace AppBundle\Service;
 
+use Symfony\Component\DomCrawler\Crawler;
 
 class ImageService
 {
