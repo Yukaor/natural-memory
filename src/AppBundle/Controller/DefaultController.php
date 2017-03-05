@@ -53,6 +53,12 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            if (($record->getH()*$record->getV()) % 2 != 0)
+            {
+                $message = "Veuillez choisir un nombre dont (horizontal * vertical)/2 est pair.";
+                return $this->render('default/index.html.twig', array('form' => $form->createView(), 'message' => $message));
+
+            }
             $record = $form->getData();
             return $this->redirectToRoute('game', array(
                 'user'=>$record->getUser(),
@@ -60,8 +66,8 @@ class DefaultController extends Controller
                 'v'=>$record->getV()
             ));
         }
-
-        return $this->render('default/index.html.twig', array('form' => $form->createView()));
+        $message = "";
+        return $this->render('default/index.html.twig', array('form' => $form->createView(), 'message' => $message));
     }
 
     /**
@@ -69,6 +75,25 @@ class DefaultController extends Controller
      */
     public function gameAction(Request $request)
     {
+        $recordToDB = new Record();
+
+        $form = $this->createFormBuilder($recordToDB)->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted())
+        {
+            $form = $request->get('form');
+            $recordToDB->setH($form['h']);
+            $recordToDB->setV($form['v']);
+            $recordToDB->setUser($form['user']);
+            $recordToDB->setTime($form['time']);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($recordToDB);
+            $em->flush();
+            return $this->redirectToRoute('scoreboard');
+        }
 
         $this->setImageService(new Service\ImageService());
         $record['user'] = $request->get('user');
@@ -105,5 +130,20 @@ class DefaultController extends Controller
         }
 
         return $this->render('default/game.html.twig', array('record'=>$record));
+    }
+
+    /**
+     * @Route("/scoreboard", name="scoreboard")
+     */
+    public function scoreboardAction()
+    {
+        $repository  = $this->getDoctrine()->getRepository('AppBundle:Record');
+        $query = $repository->createQueryBuilder('r')
+            ->orderBy('r.time', 'ASC')
+            ->getQuery();
+        $records = $query->getResult();
+
+
+        return $this->render('default/scoreboard.html.twig', array('records'=>$records));
     }
 }

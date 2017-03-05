@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {{ message }}
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
+    <a href="{{ path('scoreboard') }}">Tableau des scores</a>
 {% endblock %}

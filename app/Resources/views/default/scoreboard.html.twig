@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h2>Tableau des scores</h2>
+    <p>Retrouvez tous les scores ici.</p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Joueur</th>
+                <th>Dimensions</th>
+                <th>Temps</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record.user }}</td>
+                    <td>{{ record.h }}x{{ record.v }}</td>
+                    <td>{{ record.time }} secondes</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock %}

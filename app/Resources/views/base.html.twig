@@ -7,13 +7,13 @@
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
 
         {% block javascripts %}
             <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
             <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
         {% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
     </body>
 </html>

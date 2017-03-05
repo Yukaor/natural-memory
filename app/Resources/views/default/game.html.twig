@@ -6,8 +6,7 @@
         .img-responsive{
             padding: 10px;
         }
-        .front{
-            background-color: blue;
+        .col-xs-1{
             width: 100px;
             height: 100px;
         }
@@ -15,16 +14,19 @@
 {% endblock %}
 
 {% block body %}
+
+    {% set cardId = 1 %}
+
     <div class="container" id="plateau">
         {% for line in record.plateau %}
 
             <div class="row">
                 {% for card in line %}
-                    <div class="col-sm-1">
+                    <div class="col-xs-1">
                         <div class="img-responsive">
-                            <div id="card">
-                                <div class="front">
-
+                            <div id="{{ cardId }}">
+                                <div class="front" onclick="checkCard(this.offsetParent.id)">
+                                    <img src="https://dummyimage.com/100x100/777/fff" width="100" height="100">
                                 </div>
                                 <div class="back">
                                     <img src="{{ card }}" width="100" height="100">
@@ -32,16 +34,90 @@
                             </div>
                         </div>
                     </div>
+                    <script>
+                        $("#{{ cardId }}").flip();
+                        countImgs = countImgs+1;
+                    </script>
+                    {% set cardId = cardId+1 %}
                 {% endfor %}
             </div>
-
         {% endfor %}
     </div>
+
+    <form id="form" name="form" method="post">
+        <input type="hidden" name="form[v]" value="{{ record.v }}">
+        <input type="hidden" name="form[h]" value="{{ record.h }}">
+        <input type="hidden" name="form[user]" value="{{ record.user }}">
+        <input type="hidden" name="form[time]" id="setTime" value="">
+    </form>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $("#card").flip();
+        var firstCard = 0;
+        var countImgs = 0;
+        var countReturnedImg = 0;
+        var time = 0;
+        var touched = false;
+        var stopChrono = false;
+
+        function checkCard(id)
+        {
+            if (touched == false)
+            {
+                chrono();
+                touched = true;
+            }
+            if (firstCard == 0)
+            {
+                firstCard = id;
+            }
+            else
+            {
+                var firstCardSrc = document.getElementById(firstCard).children[1].children[0].src;
+                var secondCardSrc = document.getElementById(id).children[1].children[0].src;
+
+                if(firstCardSrc == secondCardSrc)
+                {
+                    firstCard = 0;
+                    firstCardSrc = null;
+                    countReturnedImg = countReturnedImg + 2;
+                    if(countReturnedImg == countImgs)
+                    {
+                        stopChrono = true;
+                        setTimeout(sendForm,1000);
+
+                    }
+                }
+                else
+                {
+                    setTimeout(returnCards,500);
+                    function returnCards()
+                    {
+                        $("#"+id).flip(false);
+                        $("#"+firstCard).flip(false);
+                        firstCard = 0;
+                        firstCardSrc = null;
+                    }
+                }
+            }
+        }
+
+        function chrono() {
+
+            if(stopChrono != true)
+            {
+                setTimeout(chrono,1000);
+                time = time + 1;
+            }
+        }
+        
+        function sendForm ()
+        {
+            document.getElementById("setTime").value = time;
+            document.getElementById("form").submit();
+        }
+
     </script>
 {% endblock %}
