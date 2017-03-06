@@ -44,10 +44,10 @@ class DefaultController extends Controller
         $record = new Record();
 
         $form = $this->createFormBuilder($record)
-            ->add('user', TextType::class)
-            ->add('h', IntegerType::class)
-            ->add('v', IntegerType::class)
-            ->add('save', SubmitType::class, array('label' => 'Jouer'))
+            ->add('user', TextType::class, array('label' => "Nom de l'utilisateur"))
+            ->add('h', IntegerType::class, array('label' => "Nombre d'élèments horizontaux"))
+            ->add('v', IntegerType::class, array('label' => "Nombre d'élèments verticaux"))
+            ->add('save', SubmitType::class, array('label' => 'Jouer', "attr" => array('class' => 'btn')))
             ->getForm();
 
         $form->handleRequest($request);
