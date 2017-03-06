@@ -3,7 +3,11 @@
 {% block body %}
     <h2>Création d'une partie</h2>
     <p>Retrouvez les paramètres souhaités afin de créer la partie.</p>
-    {{ message }}
+    {% if message != '' %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endif %}
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
