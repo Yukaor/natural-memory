@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Record;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -45,8 +46,30 @@ class DefaultController extends Controller
 
         $form = $this->createFormBuilder($record)
             ->add('user', TextType::class, array('label' => "Nom de l'utilisateur"))
-            ->add('h', IntegerType::class, array('label' => "Nombre d'élèments horizontaux"))
-            ->add('v', IntegerType::class, array('label' => "Nombre d'élèments verticaux"))
+            ->add('h', ChoiceType::class, array(
+                'choices'  => array(
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,
+                    '7' => 7,
+                    '8' => 8,
+                    '9' => 9,
+                    '10' => 10,
+                    '11' => 11,
+                    ),
+                    'label' => "Nombre d'élèments horizontaux"))
+            ->add('v', ChoiceType::class, array(
+                'choices'  => array(
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,),
+                    'label' => "Nombre d'élèments verticaux"))
             ->add('save', SubmitType::class, array('label' => 'Jouer', "attr" => array('class' => 'btn')))
             ->getForm();
 

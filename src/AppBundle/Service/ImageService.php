@@ -48,9 +48,10 @@ class ImageService
 
             foreach ($images as $image) {
                 if ($imagesRestantes != 0) {
-                    $iNeedle = strpos($image, 'thumb');
-                    $imglink = substr_replace($image, 'full.jpg', $iNeedle);
-                    $imgURL = "http://www.naturepicoftheday.com" . $imglink;
+
+//                    $iNeedle = strpos($image, 'thumb');
+//                    $imglink = substr_replace($image, 'full.jpg', $iNeedle);
+                    $imgURL = "http://www.naturepicoftheday.com" . $image;
 
                     if (in_array($imgURL, $rdyImages)) {
                         if ($i == 0) {

@@ -12,3 +12,12 @@
     {{ form_widget(form) }}
     {{ form_end(form) }}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('select:not([multiple])').material_select();
+        });
+    </script>
+{% endblock %}
