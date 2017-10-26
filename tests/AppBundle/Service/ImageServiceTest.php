@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: utilisateur
- * Date: 05/03/17
- * Time: 13:57
- */
 
 namespace Tests\AppBundle\Service;
 
@@ -25,7 +19,6 @@ class ImageServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetImageNature()
     {
-
         $this->setUp();
 
         $aFixture = $this->_oInstance->getImageNature(4);
@@ -41,7 +34,6 @@ class ImageServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey(4,$aFixture);
 
         parent::tearDown();
-
     }
 
 
