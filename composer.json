@@ -7,6 +7,17 @@
         "psr-4": { "": "src/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
+    "authors": [
+        {
+            "name": "Beck Nicolas",
+            "role": "Developer"
+        },
+        {
+            "name": "Tant Julien",
+            "role": "PR Master"
+        }
+    ],
+
     "autoload-dev": {
         "psr-4": { "Tests\\": "tests/" }
     },
