@@ -17,7 +17,6 @@ use AppBundle\Service;
 class DefaultController extends Controller
 {
     private $imageService;
-
     /**
      * @return mixed
      */
